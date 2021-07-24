@@ -36,7 +36,7 @@ function App() {
 
     const doubleDeck = cards.concat(cards);
 
-    const loadedDeck = doubleDeck.map((card, index) => card = { ...card, id: index, matched: false, selected: false })
+    const loadedDeck = doubleDeck.map((card, index) => card = { ...card, id: index })
 
     let currentIndex = loadedDeck.length;
 
@@ -79,6 +79,7 @@ function App() {
   const clickHandler = (card) => {
     if (flipped.length === 2) return;
     if (matched.includes(card.match_id)) return;
+    if (flipped.map(item => item.id).includes(card.id)) return
 
     setFlipped([...flipped, card]);
   }
@@ -106,25 +107,33 @@ function App() {
 
 
   return (
-    <div>
-      <div className="columns is-centered">
-        <h1 className="is-size-1 column">Matching Game</h1>
-        <h2 className="is-size-2 column">{matched.length} matches found</h2>
-        <h3 className="is-danger is-size-4 column">{gameOverStatus && "GAME OVER"}
-          <button onClick={play} className="is-button is-small">play again</button></h3>
 
+
+
+
+
+    <div className="App container">
+
+
+      <div className="columns">
+        <div className="column">
+          <h1 className="is-size-1">Matching Game</h1>
+
+
+          <h2 className="is-size-3">{matched.length === cards.length ? "All" : matched.length} matches found</h2>
+
+          <h3 className={`is-size-4 ${!gameOverStatus && "is-invisible"}`}>NICE WORK!</h3>
+          <button onClick={play} className={`button is-primary is-small ${!gameOverStatus && "is-invisible"}`}>Play Again</button>
+        </div>
       </div>
-
-
-      <div className="App columns is-centered is-multiline">
-
+      <div className=" columns is-centered is-multiline is-mobile">
         {deck.map((card, index) =>
           <Card clickHandler={clickHandler} matched={matched} flipped={flipped} card={card} key={`${card.id}-idx-${index}`} />
         )}
 
-
       </div>
     </div>
+
   );
 }
 

@@ -28,6 +28,29 @@
   color: #61dafb;
 }
 
+
+.card-anim {
+  animation: card-anim .3s ease-in-out;
+}
+
+@keyframes card-anim {
+
+  25% {
+    transform: scale(1.3) rotate(-20deg)
+  }
+  50% {
+    transform: rotate(40deg)
+  }
+  75%{
+    transform: rotate(-20deg);
+  }
+  100% {
+    transform: scale(1)
+  }
+}
+
+
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

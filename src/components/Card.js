@@ -30,9 +30,9 @@ const Card = ({ card, clickHandler, flipped, matched }) => {
     return (
 
         <div onClick={() => clickHandler(card)} className="card column is-3 m-2 py-2" >
-
-            <div className={`card-image is-size-2 ${matched.includes(card.match_id) && "has-text-grey-light"} ${invisible && "is-invisible"}`}>{card.icon}</div>
-
+            <div className={`card-content ${matched.includes(card.match_id) && "card-anim"}`}>
+                <div className={`card-image is-size-2 ${matched.includes(card.match_id) && "has-text-grey-light"} ${invisible && "is-invisible"}`}>{card.icon}</div>
+            </div>
         </div>
 
     )
