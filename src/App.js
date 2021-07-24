@@ -6,27 +6,27 @@ function App() {
 
   const cards = [
     {
-      match_id: 1,
+      match_id: "astronaut",
       icon: <i className="far fa-user-astronaut"></i>,
     },
     {
-      match_id: 2,
+      match_id: "umbrella",
       icon: <i className="fas fa-umbrella-beach"></i>
     },
     {
-      match_id: 3,
+      match_id: "phone",
       icon: <i className="fal fa-phone-office"></i>
     },
     {
-      match_id: 4,
+      match_id: "rabbit",
       icon: <i className="fal fa-rabbit-fast"></i>
     },
     {
-      match_id: 5,
+      match_id: "dragon",
       icon: <i className="fas fa-dragon"></i>
     },
     {
-      match_id: 6,
+      match_id: "monkey",
       icon: <i className="fas fa-monkey"></i>
     }
   ]
@@ -58,50 +58,68 @@ function App() {
   }
 
   const [deck, setDeck] = useState(shuffle(cards))
-  const [selection, setSelection] = useState([]);
-  const [matched, setMatched] = useState([]);
+  const [flipped, setFlipped] = useState([]) //contains card.id
+  const [matched, setMatched] = useState([]) //contains card.match_id
+  const [gameOverStatus, toggleGameOver] = useState(false);
 
 
-
-
-  const hideCards = () => {
-    setSelection([]);
-
+  const gameOver = () => {
+    toggleGameOver(true)
   }
 
-  const checkIfMatch = (card1, card2) => {
-    if (card1 === card2) {
-      setMatched([...matched, card1, card2])
-      console.log("matched!")
-    }
-
-    setTimeout(() => {
-      hideCards();
-    }, 500)
-
+  const play = () => {
+    setFlipped([]);
+    setMatched([])
+    setDeck(shuffle(cards));
+    toggleGameOver(false)
   }
+
+
 
   const clickHandler = (card) => {
-    setSelection([...selection, card.id])
-    if (selection.length > 1) {
-      checkIfMatch(selection[0], card.match_id)
-    } else {
-      setSelection(card.match_id)
+    if (flipped.length === 2) return;
+    if (matched.includes(card.match_id)) return;
+
+    setFlipped([...flipped, card]);
+  }
+
+  const checkIfMatched = (card1, card2) => {
+    if (card1.match_id === card2.match_id) {
+      setMatched([...matched, card1.match_id])
     }
   }
+
+
+  useEffect(() => {
+    if (matched.length === cards.length) {
+      gameOver();
+    }
+    if (flipped.length === 2) {
+      checkIfMatched(flipped[0], flipped[1]);
+
+
+      setTimeout(() => {
+        setFlipped([])
+      }, 500)
+    }
+  }, [flipped])
 
 
   return (
     <div>
       <div className="columns is-centered">
-        <h1 className="is-size-1">Matching Game</h1>
+        <h1 className="is-size-1 column">Matching Game</h1>
+        <h2 className="is-size-2 column">{matched.length} matches found</h2>
+        <h3 className="is-danger is-size-4 column">{gameOverStatus && "GAME OVER"}
+          <button onClick={play} className="is-button is-small">play again</button></h3>
+
       </div>
 
 
       <div className="App columns is-centered is-multiline">
 
         {deck.map((card, index) =>
-          <Card clickHandler={clickHandler} matched={matched} selection={selection} card={card} key={`${card.id}-idx-${index}`} />
+          <Card clickHandler={clickHandler} matched={matched} flipped={flipped} card={card} key={`${card.id}-idx-${index}`} />
         )}
 
 
